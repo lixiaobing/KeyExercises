@@ -1,5 +1,5 @@
 var Const = require("Const")
-
+var ArrayUtils= require("ArrayUtils")
 cc.Class({
     extends: cc.Component,
 
@@ -12,9 +12,6 @@ cc.Class({
             default: null,
             type: cc.Prefab
         },
-        // 星星产生后消失时间的随机范围
-        maxStarDuration: 0,
-        minStarDuration: 0,
         // 地面节点，用于确定星星生成的高度
         ground: {
             default: null,
@@ -41,39 +38,27 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         console.log("Const keyCodes length = "+Const.keyCodes.length);
-        // 获取地平面的 y 轴坐标
-        this.groundY = this.ground.y + this.ground.height/2;
         // 初始化计时器
         this.timer = 0;
-        this.starDuration = 0;
         // 初始化计分
         this.score = 0;
         //
         this.keyCode = 0;
         //
         this.letterTimer = 0;
-        
+        //增加按钮事件
         this.addKeyListener();
+        
+        this.letterList = [];
+        
     },
     randomKeyCode: function()
     {
-        var index =  Math.floor(cc.rand())%Const.keyCodes.length;
-        console.log("random:"+ index)  ;
+        var index =  Math.floor(cc.rand())% 5;//Const.keyCodes.length;
+        //console.log("random:"+ index)  ;
         return Const.keyCodes[index];
     },
-    // called every frame
-    update: function (dt) {
-        this.timer += dt;
-        //字母生成
-        this.letterTimer+= dt;
-        if (this.letterTimer > 2.0) 
-        {
-            this.createLetter();
-            console.log("this.letterTimer:"+this.letterTimer);
-            this.letterTimer = 0;
-        }
-    
-    },
+
     getScore: function (level) {
         switch(level)
         {
@@ -109,24 +94,65 @@ cc.Class({
         letter.setPosition(this.randomLetterPosition());
         var letComponent = letter.getComponent('Letter');
         letComponent.init(this.randomKeyCode(),1,this);
+        this.letterList.push(letComponent);
     },
     
     randomLetterPosition: function () {
         var randX = cc.randomMinus1To1() * (this.node.width/2);
         return cc.p(randX, this.node.height/2);
     },
+    createBullet: function()
+    {
+        var bullet = cc.instantiate(this.bulletPrefab);
+        this.node.addChild(bullet);
+        bullet.setPosition(cc.p(0,-this.node.height/2));
+        return bullet;
+    }
+    ,
     addKeyListener: function () {
          var self = this;
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed: function(keyCode, event) {
                 self.keyCode = keyCode;
-                console.log("do keyCode:"+keyCode);
+                //console.log("do keyCode====:"+keyCode);
             },
             onKeyReleased: function(keyCode, event) {
                 self.keyCode = 0;
             }
         }, this.node);
+    },
+    // called every frame
+    update: function (dt) {
+        //字母生成
+        this.timer+= dt;
+        if (this.timer > 2.0) 
+        {
+            this.createLetter();
+            this.timer = 0;
+        }
+        //检查
+        if (this.keyCode !== 0)
+        { 
+            for (var index in this.letterList)
+            { 
+                var letter = this.letterList[index];
+                //console.log("letter="+letter);
+                if (letter.isPick(this.keyCode))
+                {
+                    letter.doPickAction();
+                    this.createBullet();
+ 
+                    break;
+                }
+            }
+            
+        }
+        this.keyCode = 0;
+    },
+    removeLetter:function(letter)
+    {
+        ArrayUtils.remove(this.letterList,letter);
     }
     
 });

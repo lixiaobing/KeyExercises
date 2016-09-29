@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "sources": [
+    "unknown"
+  ],
+  "names": [],
+  "mappings": "AAAA,MAAM,CAAC,OAAO,GACd;;AAEI,UAAM,EAAE,gBAAS,KAAK,EAAC,MAAM,EAC7B;AACI,aAAK,IAAI,KAAK,GAAG,CAAC,EAAE,KAAK,GAAG,KAAK,CAAC,MAAM,EAAC,KAAK,EAAE,EAChD;AACI,gBAAI,KAAK,CAAC,KAAK,CAAC,KAAK,MAAM,EAC3B;;AAEI,qBAAK,CAAC,MAAM,CAAC,KAAK,EAAE,CAAC,CAAC,CAAC;aAE1B;SACJ;KACJ;;CAEJ,CAAA",
+  "file": "unknown",
+  "sourcesContent": [
+    "module.exports = \n{\n    //删除数组里的元素\n    remove: function(array,object)\n    {\n        for (var index = 0 ;index < array.length;index++ )\n        {\n            if (array[index] === object)\n            {\n                //console.log(\"remove=\",index);\n                array.splice(index ,1);\n                \n            }\n        }\n    }\n    \n}"
+  ]
+}

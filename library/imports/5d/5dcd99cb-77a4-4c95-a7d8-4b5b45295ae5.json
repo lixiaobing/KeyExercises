@@ -466,9 +466,9 @@
     "letterPrefab": {
       "__uuid__": "2db61c70-3800-4b04-ad78-cd17d8b71215"
     },
-    "bulletPrefab": null,
-    "maxStarDuration": 3,
-    "minStarDuration": 5,
+    "bulletPrefab": {
+      "__uuid__": "3ccd5b0c-fd42-4360-8b3d-30e9cd933e6d"
+    },
     "ground": {
       "__id__": 5
     },
