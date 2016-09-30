@@ -57,6 +57,10 @@ cc.Class({
         this.destoryBullet()
     },  
     isPick: function(keyCode) {
+        if (this.bullet !== null)
+        {
+            return false;
+        }
         return this.letKeyCode == keyCode;
     },
     setLock:function(bullet) //被子弹锁定
@@ -96,6 +100,16 @@ cc.Class({
             }
         }
     },
+    hitTest:function(position)
+    {
+        if (this.bullet !== null)
+        {
+            return false;
+        }
+        var dis = cc.pDistance(position,this.node.getPosition());
+        return dis <= 20.0;
+    }
+    ,
     update: function (dt) {
         if (this.enable === true)
         { 

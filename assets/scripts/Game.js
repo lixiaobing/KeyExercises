@@ -74,7 +74,7 @@ cc.Class({
         this.isGameOver = false;
         this.level = GameData.level;
         this.interval = Const.intervals[this.level];
-        this.levelLabel.string = 'Level:'+this.level
+        this.levelLabel.string = 'Level:'+this.level;
     },
     randomKeyCode: function()
     {
@@ -108,10 +108,10 @@ cc.Class({
     gameOver: function () {
 
         this.gameOverNode.active = true;
-        this.againButton.node.on(cc.Node.EventType.TOUCH_START, function(event){
+        this.againButton.node.on(cc.Node.EventType.TOUCH_END, function(event){
             cc.director.loadScene('game');
         });
-        this.backButton.node.on(cc.Node.EventType.TOUCH_START, function(event){
+        this.backButton.node.on(cc.Node.EventType.TOUCH_END, function(event){
             cc.director.loadScene('menu');
         });
     },
@@ -147,10 +147,28 @@ cc.Class({
         bullet.setPosition(cc.p(0,-this.node.height/2));
         var bulletComponent = bullet.getComponent("Bullet");
         return bulletComponent;
+    },
+    hitTest:function(position)
+    {
+        if (this.isGameOver !== true)
+        {
+            for (var index in this.letterList)
+            { 
+                var letter = this.letterList[index];
+                //console.log("letter="+letter);
+                if (letter.hitTest(position))
+                {
+                    var bullet = this.createBullet();
+                    letter.setLock(bullet);
+                    break;
+                }
+            }
+            
+        }
     }
     ,
     addKeyListener: function () {
-         var self = this;
+        var self = this;
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed: function(keyCode, event) {
@@ -161,6 +179,15 @@ cc.Class({
                 self.keyCode = 0;
             }
         }, this.node);
+        
+        this.node.on(cc.Node.EventType.TOUCH_END,function(event){
+            //console.log("xxxxxxxxxxxxxxxx"+event);
+            var position = event.getLocation();
+            position = self.node.convertToNodeSpaceAR(position);
+            cc.log("点击全局坐标： ",position.x,position.y);
+            self.hitTest(position);
+        });
+        
     },
     countdown:function(dt)
     {
@@ -203,9 +230,9 @@ cc.Class({
         }
         //检查
         if (this.keyCode !== 0)
-        { 
+        {
             for (var index in this.letterList)
-            { 
+            {
                 var letter = this.letterList[index];
                 //console.log("letter="+letter);
                 if (letter.isPick(this.keyCode))
@@ -215,9 +242,9 @@ cc.Class({
                     break;
                 }
             }
-            
+            this.keyCode = 0 ;
         }
-        this.keyCode = 0;
+ 
     },
     removeLetter:function(letter)
     {

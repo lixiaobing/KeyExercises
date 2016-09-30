@@ -105,10 +105,10 @@ cc.Class({
     gameOver: function gameOver() {
 
         this.gameOverNode.active = true;
-        this.againButton.node.on(cc.Node.EventType.TOUCH_START, function (event) {
+        this.againButton.node.on(cc.Node.EventType.TOUCH_END, function (event) {
             cc.director.loadScene('game');
         });
-        this.backButton.node.on(cc.Node.EventType.TOUCH_START, function (event) {
+        this.backButton.node.on(cc.Node.EventType.TOUCH_END, function (event) {
             cc.director.loadScene('menu');
         });
     },
@@ -143,6 +143,19 @@ cc.Class({
         var bulletComponent = bullet.getComponent("Bullet");
         return bulletComponent;
     },
+    hitTest: function hitTest(position) {
+        if (this.isGameOver !== true) {
+            for (var index in this.letterList) {
+                var letter = this.letterList[index];
+                //console.log("letter="+letter);
+                if (letter.hitTest(position)) {
+                    var bullet = this.createBullet();
+                    letter.setLock(bullet);
+                    break;
+                }
+            }
+        }
+    },
 
     addKeyListener: function addKeyListener() {
         var self = this;
@@ -156,6 +169,14 @@ cc.Class({
                 self.keyCode = 0;
             }
         }, this.node);
+
+        this.node.on(cc.Node.EventType.TOUCH_END, function (event) {
+            //console.log("xxxxxxxxxxxxxxxx"+event);
+            var position = event.getLocation();
+            position = self.node.convertToNodeSpaceAR(position);
+            cc.log("点击全局坐标： ", position.x, position.y);
+            self.hitTest(position);
+        });
     },
     countdown: function countdown(dt) {
         if (this.time > 0) {
@@ -201,8 +222,8 @@ cc.Class({
                     break;
                 }
             }
+            this.keyCode = 0;
         }
-        this.keyCode = 0;
     },
     removeLetter: function removeLetter(letter) {
         ArrayUtils.remove(this.letterList, letter);
