@@ -1,6 +1,6 @@
 module.exports = 
 {
-    letSpeeds:new Array(1,2,3,4,5) ,
+    letSpeeds:new Array(1,4,8,4,5) ,
     keyCodes:new Array(
                         cc.KEY.a,
                         cc.KEY.b,
@@ -28,7 +28,8 @@ module.exports =
                         cc.KEY.x,
                         cc.KEY.y,
                         cc.KEY.z),
-    keyMap: {}
+    keyMap: {},
+    intervals:[2,2,1,0.5]
    
     
 };

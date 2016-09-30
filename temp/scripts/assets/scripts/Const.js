@@ -3,9 +3,10 @@ cc._RFpush(module, '8e444QNgelAmpjsxhXbKSHG', 'Const');
 // scripts\Const.js
 
 module.exports = {
-                    letSpeeds: new Array(1, 2, 3, 4, 5),
+                    letSpeeds: new Array(1, 4, 8, 4, 5),
                     keyCodes: new Array(cc.KEY.a, cc.KEY.b, cc.KEY.c, cc.KEY.d, cc.KEY.e, cc.KEY.f, cc.KEY.g, cc.KEY.h, cc.KEY.i, cc.KEY.j, cc.KEY.k, cc.KEY.l, cc.KEY.m, cc.KEY.n, cc.KEY.o, cc.KEY.p, cc.KEY.q, cc.KEY.r, cc.KEY.s, cc.KEY.t, cc.KEY.u, cc.KEY.v, cc.KEY.w, cc.KEY.x, cc.KEY.y, cc.KEY.z),
-                    keyMap: {}
+                    keyMap: {},
+                    intervals: [2, 2, 1, 0.5]
 
 };
 module.exports.keyMap[cc.KEY.a] = "A";

@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "sources": [
+    "unknown"
+  ],
+  "names": [],
+  "mappings": "AAAA,MAAM,CAAC,OAAO,GACd;AACI,SAAK,EAAC,CAAC;CACV,CAAA",
+  "file": "unknown",
+  "sourcesContent": [
+    "module.exports = \n{\n    level:1\n}"
+  ]
+}

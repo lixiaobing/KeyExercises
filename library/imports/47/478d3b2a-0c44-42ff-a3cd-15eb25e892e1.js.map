@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "sources": [
+    "unknown"
+  ],
+  "names": [],
+  "mappings": "AAAA,IAAI,QAAQ,GAAG,OAAO,CAAC,UAAU,CAAC,CAAA;AAClC,EAAE,CAAC,KAAK,CAAC;AACL,eAAS,EAAE,CAAC,SAAS;;AAErB,cAAU,EAAE;AACR,eAAO,EACP;AACI,uBAAQ,IAAI;AACZ,gBAAI,EAAC,EAAE,CAAC,MAAM;SACjB;AACD,iBAAS,EACT;AACI,uBAAQ,IAAI;AACZ,gBAAI,EAAC,EAAE,CAAC,MAAM;SACjB;AACD,eAAO,EACP;AACI,uBAAQ,IAAI;AACZ,gBAAI,EAAC,EAAE,CAAC,MAAM;SACjB;KACJ;AACD,aAAS,EAAC,mBAAS,KAAK,EACxB;AACI,gBAAQ,CAAC,KAAK,GAAG,KAAK,CAAC;AACvB,UAAE,CAAC,QAAQ,CAAC,SAAS,CAAC,MAAM,CAAC,CAAC;KACjC;;AAED,UAAM,EAAE,kBAAY;AAChB,YAAI,IAAI,GAAG,IAAI,CAAC;AAChB,YAAI,CAAC,OAAO,CAAC,IAAI,CAAC,EAAE,CAAC,EAAE,CAAC,IAAI,CAAC,SAAS,CAAC,WAAW,EAAE,UAAS,KAAK,EAAC;AAC/D,gBAAI,CAAC,SAAS,CAAC,CAAC,CAAC,CAAC;SACrB,CAAC,CAAC;AACH,YAAI,CAAC,SAAS,CAAC,IAAI,CAAC,EAAE,CAAC,EAAE,CAAC,IAAI,CAAC,SAAS,CAAC,WAAW,EAAE,UAAS,KAAK,EAAC;AACjE,gBAAI,CAAC,SAAS,CAAC,CAAC,CAAC,CAAC;SACrB,CAAC,CAAC;AACH,YAAI,CAAC,OAAO,CAAC,IAAI,CAAC,EAAE,CAAC,EAAE,CAAC,IAAI,CAAC,SAAS,CAAC,WAAW,EAAE,UAAS,KAAK,EAAC;AAC/D,gBAAI,CAAC,SAAS,CAAC,CAAC,CAAC,CAAC;SACrB,CAAC,CAAC;KACN;CACJ,CAAC,CAAC",
+  "file": "unknown",
+  "sourcesContent": [
+    "var GameData = require(\"GameData\")\r\ncc.Class({\r\n    extends: cc.Component,\r\n\r\n    properties: {\r\n        btnEasy:\r\n        {\r\n            default:null,\r\n            type:cc.Button\r\n        },\r\n        btnNormal:\r\n        {\r\n            default:null,\r\n            type:cc.Button\r\n        },\r\n        btnHard:\r\n        {\r\n            default:null,\r\n            type:cc.Button\r\n        }\r\n    },\r\n    startGame:function(level)\r\n    {\r\n        GameData.level = level;\r\n        cc.director.loadScene('game');\r\n    }\r\n    ,\r\n    onLoad: function () {\r\n        var self = this;\r\n        this.btnEasy.node.on(cc.Node.EventType.TOUCH_START, function(event){\r\n            self.startGame(1);\r\n        });\r\n        this.btnNormal.node.on(cc.Node.EventType.TOUCH_START, function(event){\r\n            self.startGame(2);\r\n        });\r\n        this.btnHard.node.on(cc.Node.EventType.TOUCH_START, function(event){\r\n            self.startGame(3);\r\n        });\r\n    },\r\n});\r\n"
+  ]
+}
