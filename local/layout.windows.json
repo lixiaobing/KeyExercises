@@ -3,7 +3,7 @@
   "windows": {
     "main": {
       "x": -8,
-      "y": -8,
+      "y": 0,
       "width": 1456,
       "height": 876,
       "layout": {

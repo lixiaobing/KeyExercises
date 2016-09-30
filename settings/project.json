@@ -1,12 +1,12 @@
 {
-  "start-scene": "5dcd99cb-77a4-4c95-a7d8-4b5b45295ae5",
-  "group-list": [
-    "default"
-  ],
   "collision-matrix": [
     [
       true
     ]
   ],
-  "excluded-modules": []
+  "excluded-modules": [],
+  "group-list": [
+    "default"
+  ],
+  "start-scene": "d670f2e5-3cbc-4bb9-8b2a-7cceebbb9230"
 }
