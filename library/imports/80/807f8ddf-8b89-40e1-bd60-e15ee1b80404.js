@@ -95,7 +95,7 @@ cc.Class({
             return false;
         }
         var dis = cc.pDistance(position, this.node.getPosition());
-        return dis <= 20.0;
+        return dis <= 40.0;
     },
 
     update: function update(dt) {
