@@ -2,6 +2,8 @@
 cc._RFpush(module, '4e12fLSQu1L+KV6QmxDiavU', 'Game');
 // scripts\Game.js
 
+var Const = require("Const");
+var ArrayUtils = require("ArrayUtils");
 cc.Class({
     "extends": cc.Component,
 
@@ -10,9 +12,10 @@ cc.Class({
             "default": null,
             type: cc.Prefab
         },
-        // 星星产生后消失时间的随机范围
-        maxStarDuration: 0,
-        minStarDuration: 0,
+        bulletPrefab: {
+            "default": null,
+            type: cc.Prefab
+        },
         // 地面节点，用于确定星星生成的高度
         ground: {
             "default": null,
@@ -28,76 +31,49 @@ cc.Class({
             "default": null,
             type: cc.Label
         },
+        // 时间 label 的引用
+        timeLabel: {
+            "default": null,
+            type: cc.Label
+        },
         // 得分音效资源
         scoreAudio: {
             "default": null,
             url: cc.AudioClip
+        },
+        // 时间 label 的引用
+        gameOverNode: {
+            "default": null,
+            type: cc.Node
+        },
+        startButton: {
+            "default": null,
+            type: cc.Button
         }
 
     },
 
     // use this for initialization
     onLoad: function onLoad() {
-        // 获取地平面的 y 轴坐标
-        this.groundY = this.ground.y + this.ground.height / 2;
+
+        this.time = 30;
         // 初始化计时器
-        this.timer = 0;
-        this.starDuration = 0;
+        this.timer = 2.0;
         // 初始化计分
         this.score = 0;
         //
         this.keyCode = 0;
-        //
-        this.letterTimer = 0;
-
+        //增加按钮事件
         this.addKeyListener();
-
-        this.keyMap = {};
-        this.keyMap[cc.KEY.a] = "A";
-        this.keyMap[cc.KEY.b] = "B";
-        this.keyMap[cc.KEY.c] = "C";
-        this.keyMap[cc.KEY.d] = "D";
-        this.keyMap[cc.KEY.e] = "E";
-        this.keyMap[cc.KEY.f] = "F";
-        this.keyMap[cc.KEY.g] = "G";
-        this.keyMap[cc.KEY.h] = "H";
-        this.keyMap[cc.KEY.i] = "I";
-        this.keyMap[cc.KEY.j] = "J";
-        this.keyMap[cc.KEY.k] = "K";
-        this.keyMap[cc.KEY.l] = "L";
-        this.keyMap[cc.KEY.m] = "M";
-        this.keyMap[cc.KEY.n] = "N";
-        this.keyMap[cc.KEY.o] = "O";
-        this.keyMap[cc.KEY.p] = "P";
-        this.keyMap[cc.KEY.q] = "Q";
-        this.keyMap[cc.KEY.r] = "R";
-        this.keyMap[cc.KEY.s] = "S";
-        this.keyMap[cc.KEY.t] = "T";
-        this.keyMap[cc.KEY.u] = "U";
-        this.keyMap[cc.KEY.v] = "V";
-        this.keyMap[cc.KEY.w] = "W";
-        this.keyMap[cc.KEY.x] = "X";
-        this.keyMap[cc.KEY.y] = "Y";
-        this.keyMap[cc.KEY.z] = "Z";
-
-        this.keyCodes = new Array(cc.KEY.a, cc.KEY.b, cc.KEY.c, cc.KEY.d, cc.KEY.e, cc.KEY.f, cc.KEY.g, cc.KEY.h, cc.KEY.i, cc.KEY.j, cc.KEY.k, cc.KEY.l, cc.KEY.m, cc.KEY.n, cc.KEY.o, cc.KEY.p, cc.KEY.q, cc.KEY.r, cc.KEY.s, cc.KEY.t, cc.KEY.u, cc.KEY.v, cc.KEY.w, cc.KEY.x, cc.KEY.y, cc.KEY.z);
+        this.letterList = [];
+        this.isGameOver = false;
     },
     randomKeyCode: function randomKeyCode() {
-        var index = Math.floor(cc.rand()) % this.keyCodes.length;
-        console.log("random:" + index);
-        return this.keyCodes[index];
+        var index = Math.floor(cc.rand()) % Const.keyCodes.length;
+        //console.log("random:"+ index)  ;
+        return Const.keyCodes[index];
     },
-    // called every frame
-    update: function update(dt) {
-        this.timer += dt;
-        //字母生成
-        this.letterTimer += dt;
-        if (this.letterTimer > 2.0) {
-            this.createLetter();
-            console.log("this.letterTimer:" + this.letterTimer);
-            this.letterTimer = 0;
-        }
-    },
+
     getScore: function getScore(level) {
         switch (level) {
             case 1:
@@ -119,8 +95,14 @@ cc.Class({
     },
 
     gameOver: function gameOver() {
-        this.player.stopAllActions(); //停止 player 节点的跳跃动作
-        cc.director.loadScene('game');
+        //this.player.stopAllActions(); //停止 player 节点的跳跃动作
+
+        this.gameOverNode.active = true;
+
+        this.startButton.node.on(cc.Node.EventType.TOUCH_START, function (event) {
+            console.log("按钮按下");
+            cc.director.loadScene('game');
+        });
     },
 
     createLetter: function createLetter() {
@@ -132,22 +114,83 @@ cc.Class({
         letter.setPosition(this.randomLetterPosition());
         var letComponent = letter.getComponent('Letter');
         letComponent.init(this.randomKeyCode(), 1, this);
+        this.letterList.push(letComponent);
     },
 
     randomLetterPosition: function randomLetterPosition() {
         var randX = cc.randomMinus1To1() * (this.node.width / 2);
         return cc.p(randX, this.node.height / 2);
     },
+    createBullet: function createBullet() {
+        var bullet = cc.instantiate(this.bulletPrefab);
+        this.node.addChild(bullet);
+        bullet.setPosition(cc.p(0, -this.node.height / 2));
+        var bulletComponent = bullet.getComponent("Bullet");
+        return bulletComponent;
+    },
+
     addKeyListener: function addKeyListener() {
         var self = this;
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed: function onKeyPressed(keyCode, event) {
                 self.keyCode = keyCode;
-                console.log("do keyCode:" + keyCode);
+                //console.log("do keyCode====:"+keyCode);
             },
-            onKeyReleased: function onKeyReleased(keyCode, event) {}
+            onKeyReleased: function onKeyReleased(keyCode, event) {
+                self.keyCode = 0;
+            }
         }, this.node);
+    },
+    countdown: function countdown(dt) {
+        if (this.time > 0) {
+            this.time -= dt;
+            if (this.time <= 0.0) {
+                this.time = 0;
+            }
+            var curTime = Math.floor(this.time);
+            if (this.timeLabel.time !== curTime) {
+                this.timeLabel.string = "time:" + curTime + "s";
+                this.timeLabel.time = curTime;
+            }
+        }
+    },
+    // called every frame
+    update: function update(dt) {
+        if (this.isGameOver !== true) {
+            this.gameRunning(dt);
+        }
+    },
+    gameRunning: function gameRunning(dt) {
+        this.countdown(dt);
+        if (this.time <= 0) {
+            this.isGameOver = true;
+            this.gameOver();
+            console.log("gameover");
+            return;
+        }
+        //字母生成 2秒钟生成一次
+        this.timer += dt;
+        if (this.timer > 2.0) {
+            this.createLetter();
+            this.timer = 0;
+        }
+        //检查
+        if (this.keyCode !== 0) {
+            for (var index in this.letterList) {
+                var letter = this.letterList[index];
+                //console.log("letter="+letter);
+                if (letter.isPick(this.keyCode)) {
+                    var bullet = this.createBullet();
+                    letter.setLock(bullet);
+                    break;
+                }
+            }
+        }
+        this.keyCode = 0;
+    },
+    removeLetter: function removeLetter(letter) {
+        ArrayUtils.remove(this.letterList, letter);
     }
 
 });

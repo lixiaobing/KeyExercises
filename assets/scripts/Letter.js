@@ -1,5 +1,7 @@
 
 var Const = require("Const")
+//
+var STATE = { NORMAR:1,DANGER:2};
 cc.Class({
     extends: cc.Component,
 
@@ -14,6 +16,7 @@ cc.Class({
         this.level      = 1;
         this.speed      = 1;
         this.enable     = true;
+        this.bullet     = null;
     },
     getLetter:function(keyCode) 
     {
@@ -27,28 +30,71 @@ cc.Class({
         this.enable     = true;
         this.letterLabel.string = this.getLetter(this.letKeyCode);
         this.speed      = Const.letSpeeds[this.level-1];
+        this.state      = STATE.NORMAR;
     },
-    destroy: function() {
+    destroyPick: function() {
         this.game.addScore(this.level);
+        this.node.destroy();
+    },
+    destroyLose: function() {
         this.node.destroy();
     },
     
     doPickAction: function() {
         var scale = cc.scaleTo(0.05, 2);
-        var callback = cc.callFunc(this.destroy, this);
+        var callback = cc.callFunc(this.destroyPick, this);
         this.node.runAction(cc.sequence(scale, callback));
         this.enable = false;
         this.game.removeLetter(this);
+        this.destoryBullet()
     },
     doLoseAction: function() {
         var scale = cc.scaleTo(0.05, 0.1);
-        var callback = cc.callFunc(this.destroy, this);
+        var callback = cc.callFunc(this.destroyLose, this);
         this.node.runAction(cc.sequence(scale, callback));
         this.enable = false;
         this.game.removeLetter(this);
+        this.destoryBullet()
     },  
     isPick: function(keyCode) {
         return this.letKeyCode == keyCode;
+    },
+    setLock:function(bullet) //被子弹锁定
+    {
+        this.bullet = bullet;
+    },
+    destoryBullet:function()
+    {
+        if (this.bullet !== null)
+        {
+            this.bullet.destory();
+            this.bullet = null;
+        }
+    },
+    setState:function(state)
+    {
+       if (this.state !== state)
+       {
+           switch(state)
+           {
+                case STATE.NORMAR:
+                   break;
+                case STATE.DANGER:
+                    this.node.runAction(cc.blink(2, 10));
+                   break;
+           }
+           this.state = state;
+       }
+    },
+    checkDangerous:function()
+    {
+        if (this.state === STATE.NORMAR)
+        {
+            if (this.node.y < -200 )
+            {
+                this.setState(STATE.DANGER);
+            }
+        }
     },
     update: function (dt) {
         if (this.enable === true)
@@ -58,6 +104,15 @@ cc.Class({
             if (this.node.y < -320)
             {
                 this.doLoseAction();
+                return ;
+            }
+            this.checkDangerous();
+            if (this.bullet !== null)
+            {
+                if (this.bullet.follow(this.node))
+                {
+                    this.doPickAction()
+                }
             }
         }
     }

@@ -27,34 +27,46 @@ cc.Class({
             default: null,
             type: cc.Label
         },
+        // 时间 label 的引用
+        timeLabel: {
+            default: null,
+            type: cc.Label
+        },
         // 得分音效资源
         scoreAudio: {
             default: null,
             url: cc.AudioClip
+        },
+                // 时间 label 的引用
+        gameOverNode: {
+            default: null,
+            type: cc.Node
+        },
+        startButton: {
+            default: null,
+            type: cc.Button
         },
 
     },
 
     // use this for initialization
     onLoad: function () {
-        console.log("Const keyCodes length = "+Const.keyCodes.length);
+
+        this.time = 30;
         // 初始化计时器
-        this.timer = 0;
+        this.timer = 2.0;
         // 初始化计分
         this.score = 0;
         //
         this.keyCode = 0;
-        //
-        this.letterTimer = 0;
         //增加按钮事件
         this.addKeyListener();
-        
         this.letterList = [];
-        
+        this.isGameOver = false;
     },
     randomKeyCode: function()
     {
-        var index =  Math.floor(cc.rand())% 5;//Const.keyCodes.length;
+        var index =  Math.floor(cc.rand())%Const.keyCodes.length;
         //console.log("random:"+ index)  ;
         return Const.keyCodes[index];
     },
@@ -82,8 +94,14 @@ cc.Class({
     },
 
     gameOver: function () {
-        this.player.stopAllActions(); //停止 player 节点的跳跃动作
-        cc.director.loadScene('game');
+        //this.player.stopAllActions(); //停止 player 节点的跳跃动作
+     
+        this.gameOverNode.active = true;
+ 
+        this.startButton.node.on(cc.Node.EventType.TOUCH_START, function(event){
+            console.log("按钮按下");
+               cc.director.loadScene('game');
+        });
     },
     
     createLetter: function() {  //生成一个字母
@@ -106,7 +124,8 @@ cc.Class({
         var bullet = cc.instantiate(this.bulletPrefab);
         this.node.addChild(bullet);
         bullet.setPosition(cc.p(0,-this.node.height/2));
-        return bullet;
+        var bulletComponent = bullet.getComponent("Bullet");
+        return bulletComponent;
     }
     ,
     addKeyListener: function () {
@@ -122,9 +141,39 @@ cc.Class({
             }
         }, this.node);
     },
-    // called every frame
+    countdown:function(dt)
+    {
+        if( this.time > 0){ 
+            this.time -= dt; 
+            if (this.time <= 0.0)
+            {
+                this.time = 0;
+            }
+            var curTime = Math.floor(this.time)
+            if (this.timeLabel.time !== curTime)
+            {
+                this.timeLabel.string = "time:" + curTime +"s";
+                this.timeLabel.time = curTime
+            }
+        }
+     },
+         // called every frame
     update: function (dt) {
-        //字母生成
+        if (this.isGameOver !== true)
+        {
+            this.gameRunning(dt)
+        }
+    },
+    gameRunning: function (dt) {
+        this.countdown(dt);
+        if (this.time <= 0)
+        {
+            this.isGameOver = true;
+            this.gameOver();
+            console.log("gameover")
+            return;
+        }
+        //字母生成 2秒钟生成一次
         this.timer+= dt;
         if (this.timer > 2.0) 
         {
@@ -140,9 +189,8 @@ cc.Class({
                 //console.log("letter="+letter);
                 if (letter.isPick(this.keyCode))
                 {
-                    letter.doPickAction();
-                    this.createBullet();
- 
+                    var bullet = this.createBullet();
+                    letter.setLock(bullet);
                     break;
                 }
             }

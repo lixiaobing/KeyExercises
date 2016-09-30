@@ -1,15 +1,22 @@
 cc.Class({
     "extends": cc.Component,
 
-    properties: {},
-    onLoad: function onLoad() {
-        this.speed = 6;
+    properties: {
+        speed: 10
     },
-    move: function move() {
+    onLoad: function onLoad() {
+        this.speed = 30;
+    },
+    destory: function destory() {
+        //console.log("this.node:"+this.node);
+        this.node.destroy();
+    },
+
+    follow: function follow(letterNode) {
         var srcPos = this.node.getPosition();
-        var targetPos = this.letter.node.getPosition();
-        var dis = cc.pGetDistance(targetPos, srcPos);
-        if (dis > 6) {
+        var targetPos = letterNode.getPosition();
+        var dis = cc.pDistance(targetPos, srcPos);
+        if (dis > this.speed / 2) {
             var time = Math.abs(dis / this.speed);
             var x_dis = targetPos.x - srcPos.x;
             var y_dis = targetPos.y - srcPos.y;
@@ -17,9 +24,9 @@ cc.Class({
             var y_speed = y_dis / time;
             this.node.x = this.node.x + x_speed;
             this.node.y = this.node.y + y_speed;
+        } else {
+            return true;
         }
-    },
-    update: function update() {
-        if (this.letter !== undefined) {}
+        return false;
     }
 });

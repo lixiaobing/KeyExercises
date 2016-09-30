@@ -185,18 +185,18 @@
     "relativePath": "font\\mikado_outline_shadow.fnt"
   },
   "5dcd99cb-77a4-4c95-a7d8-4b5b45295ae5": {
-    "asset": 1475152481508,
-    "meta": 1475152481520,
+    "asset": 1475206501660,
+    "meta": 1475206501675,
     "relativePath": "game.fire"
   },
   "51b0ea7f-a166-4130-bf0b-7f70fc60cb1d": {
-    "asset": 1475141109872,
-    "meta": 1475141555250,
+    "asset": 1475148029721,
+    "meta": 1475196763628,
     "relativePath": "scripts"
   },
   "4e12f2d2-42ed-4bf8-a57a-426c4389abd4": {
-    "asset": 1475151673736,
-    "meta": 1475151673856,
+    "asset": 1475206566772,
+    "meta": 1475206566901,
     "relativePath": "scripts\\Game.js"
   },
   "6c688bfb-d907-4e29-a982-1824fec5a01d": {
@@ -205,13 +205,13 @@
     "relativePath": "scripts\\Player.js"
   },
   "4644fd26-d96b-4005-8472-fa99fa74e686": {
-    "asset": 1475152468551,
-    "meta": 1475152468588,
+    "asset": 1475206587253,
+    "meta": 1475206587296,
     "relativePath": "scripts\\Bullet.js"
   },
   "3ccd5b0c-fd42-4360-8b3d-30e9cd933e6d": {
-    "asset": 1475126429141,
-    "meta": 1475126429174,
+    "asset": 1475202511558,
+    "meta": 1475202511573,
     "relativePath": "Bullet.prefab"
   },
   "f2bd42d3-db89-4efd-b925-6233e5f0d525": {
@@ -255,8 +255,8 @@
     "relativePath": "Letter.prefab"
   },
   "807f8ddf-8b89-40e1-bd60-e15ee1b80404": {
-    "asset": 1475150465376,
-    "meta": 1475150465526,
+    "asset": 1475202326332,
+    "meta": 1475202326435,
     "relativePath": "scripts\\Letter.js"
   },
   "1b3eb5a4-a437-4e03-bca5-ff65ab4aa400": {
@@ -273,5 +273,20 @@
     "asset": 1475151546056,
     "meta": 1475151546087,
     "relativePath": "scripts\\ArrayUtils.js"
+  },
+  "63ab9517-e973-46b4-a951-e3a0815e21bd": {
+    "asset": 1475205429527,
+    "meta": 1475205429706,
+    "relativePath": "textures\\btn_start_02.png"
+  },
+  "b37962eb-7f43-4694-bc0a-eb36c1329c8b": {
+    "asset": 1475205429528,
+    "meta": 1475205429709,
+    "relativePath": "textures\\btn_start_01.png"
+  },
+  "2d58c002-9113-43c9-8760-d89a6b9d639a": {
+    "asset": 1475205429528,
+    "meta": 1475205429726,
+    "relativePath": "textures\\btn_start_03.png"
   }
 }

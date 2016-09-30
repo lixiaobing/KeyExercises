@@ -97,7 +97,7 @@
       "__id__": 1
     },
     "_enabled": true,
-    "pickRadius": 60
+    "speed": 30
   },
   {
     "__type__": "cc.PrefabInfo",
